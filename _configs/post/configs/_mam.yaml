@@ -1,0 +1,483 @@
+$global:
+  exclusions:
+  - .idea
+  - .mam
+  - .mypy_cache
+  - venv
+  src:
+    all:
+      directory: src
+      glob: ./src/**/*
+    python:
+      directory: src
+      glob: ./src/**/*.py
+    yaml:
+      directory: src
+      glob: ./src/**/*.yaml
+files:
+- additional.py
+mutations:
+- '@mam.tasks:mutations.sort_location'
+- '@mam.tasks:mutations.clean_extensions'
+- '@mam.tasks:mutations.merge_duplicates'
+- '@mam.tasks:mutations.remove_mam'
+- '@mam.tasks:mutations.remove_nosa'
+output: '@mam.tasks:output.default'
+tasks:
+- args:
+  - src
+  command: radon cc -nc
+  config:
+    dir: ./configs
+    name: radon.ini
+    path: ./configs/radon.ini
+  converter: '@mam.tasks:converters.radon'
+  deps:
+  - radon
+  name: radon
+  python: null
+- args:
+  - src
+  command: radon mi -nb
+  config:
+    dir: ./configs
+    name: radon-mi.ini
+    path: ./configs/radon-mi.ini
+  converter: '@mam.tasks:converters.radon_mi'
+  deps:
+  - radon
+  name: radon-mi
+  python: null
+- args:
+  - .
+  command: pyroma
+  config:
+    dir: ./configs
+    name: pyroma.ini
+    path: ./configs/pyroma.ini
+  converter: '@mam.tasks:converters.pyroma'
+  deps:
+  - pyroma
+  name: pyroma
+  python: null
+- args:
+  - src
+  command: detect-secrets scan --all-files
+  config:
+    dir: ./configs
+    name: detect-secrets.ini
+    path: ./configs/detect-secrets.ini
+  converter: '@mam.tasks:converters.detect_secrets'
+  deps:
+  - detect-secrets
+  name: detect-secrets
+  python: null
+- args:
+  - src
+  command: python -m pydiatra
+  config:
+    dir: ./configs
+    name: pydiatra.ini
+    path: ./configs/pydiatra.ini
+  converter: '@mam.tasks:converters.pydiatra'
+  deps:
+  - pydiatra
+  name: pydiatra
+  python: null
+- args:
+  - src
+  command: pylama
+  config:
+    dir: ./configs
+    name: pylama.ini
+    path: ./configs/pylama.ini
+  converter: '@mam.tasks:converters.pylama'
+  deps:
+  - pylama
+  - pylama_pylint
+  name: pylama
+  python: null
+- args:
+  - src
+  command: prospector --without-tool pyflakes --strictness veryhigh --no-autodetect
+    --output-format json
+  config:
+    dir: ./configs
+    name: prospector.ini
+    path: ./configs/prospector.ini
+  converter: '@mam.tasks:converters.prospector_json'
+  deps:
+  - prospector
+  name: prospector
+  python: null
+- args:
+  - src
+  command: bandit -r --format custom --msg-template "{relpath}:{line}:{test_id}:{severity}:{msg}:{confidence}:{range}"
+  config:
+    dir: ./configs
+    flag: --configfile
+    name: bandit.ini
+    path: ./configs/bandit.ini
+    sep: ' '
+  converter: '@mam.tasks:converters.bandit_mam_custom'
+  deps:
+  - bandit
+  name: bandit
+  python: null
+- args:
+  - src
+  command: frosted -r
+  config:
+    dir: ./configs
+    name: frosted.ini
+    path: ./configs/frosted.ini
+  converter: '@mam.tasks:converters.pyflakes'
+  deps:
+  - frosted
+  name: frosted
+  python: null
+- args:
+  - src
+  command: pydocstyle
+  config:
+    dir: ./configs
+    name: pydocstyle.ini
+    path: ./configs/pydocstyle.ini
+  converter: '@mam.tasks:converters.pydocstyle'
+  deps:
+  - pydocstyle
+  name: pydocstyle
+  python: null
+- args:
+  - src
+  command: mypy
+  config:
+    dir: ./configs
+    name: mypy.ini
+    path: ./configs/mypy.ini
+  converter: '@mam.tasks:converters.mypy'
+  deps:
+  - mypy
+  name: mypy
+  python: null
+- args:
+  - src
+  command: pycodestyle
+  config:
+    dir: ./configs
+    name: pycodestyle.ini
+    path: ./configs/pycodestyle.ini
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - pycodestyle
+  name: pycodestyle
+  python: null
+- args:
+  - src
+  command: flake8
+  config: &id001
+    dir: ./configs
+    name: flake8.ini
+    path: ./configs/flake8.ini
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  extends:
+  - pyflakes
+  - pycodestyle
+  name: flake8
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - cohesion
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-cohesion
+  python: null
+- args:
+  - src
+  command: flake8 --max-annotations-complexity=3
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-annotations-complexity
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-annotations-complexity
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-blind-except
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-blind-except
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-broken-line
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-broken-line
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-bugbear
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-bugbear
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-builtins
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-builtins
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-class-attributes-order
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-class-attributes-order
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-commas
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-commas
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-comprehensions
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-comprehensions
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-import-order
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-import-order
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-logging-format
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-logging-format
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-mutable
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-mutable
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-nitpick
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-nitpick
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-pep3101
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-pep3101
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-print
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-print
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-pyi
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-pyi
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-quotes
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-quotes
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-string-format
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-string-format
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-tidy-imports
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-tidy-imports
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - flake8-variables-names
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-variables-names
+  python: null
+- args:
+  - src
+  command: flake8
+  config: *id001
+  converter: '@mam.tasks:converters.pycodestyle'
+  deps:
+  - flake8
+  - pep8-naming
+  extends:
+  - pyflakes
+  - pycodestyle
+  - flake8
+  name: flake8-pep8-naming
+  python: null

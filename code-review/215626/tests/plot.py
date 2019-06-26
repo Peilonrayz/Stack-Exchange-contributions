@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 from graphtimer import Plotter, MultiTimer
 
-from .changes import available, test_orig, test_early_leaf, test_peil
+from se_code.changes import available, test_orig, test_early_leaf, test_peil
 
 
 def main():
