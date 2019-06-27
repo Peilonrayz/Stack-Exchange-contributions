@@ -63,7 +63,8 @@ def main(MAXCALORIES):
     print()
     print(AllSP[index], "  ", AllNames[index])
 
-for i in range(100, 3000, 10):
-    start = time.time()
-    main(i)
-    print("Calories:", i, ">>> Time:", time.time()-start)
+if __name__ == '__main__':
+    for i in range(100, 3000, 10):
+        start = time.time()
+        main(i)
+        print("Calories:", i, ">>> Time:", time.time()-start)

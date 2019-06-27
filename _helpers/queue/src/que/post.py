@@ -11,12 +11,11 @@ CONFIG = pathlib.Path('_configs') / 'post'
 
 
 def handle_deactivate():
-    with open('.active', 'w') as f:
-        f.write('{}')
-
     paths = [
         CONFIG / 'src',
         CONFIG / 'tests',
+        CONFIG / 'static',
+        CONFIG / 'docs' / 'source' / 'static',
         CONFIG / 'docs' / 'source' / 'post.rst',
         CONFIG / 'docs' / 'build' / 'markdown' / 'post.md',
     ]
@@ -30,6 +29,8 @@ def handle_activate(active):
     paths = [
         (CURR / 'src', CONFIG / 'src'),
         (CURR / 'tests', CONFIG / 'tests'),
+        (CURR / 'static', CONFIG / 'static'),
+        (CURR / 'static', CONFIG / 'docs' / 'source' / 'static'),
         (CURR / 'post.rst', CONFIG / 'docs' / 'source' / 'post.rst'),
         (CURR / 'post.md', CONFIG / 'docs' / 'build' / 'markdown' / 'post.md'),
     ]
@@ -38,7 +39,10 @@ def handle_activate(active):
 
 
 def handle_active(args):
+    new = False
     if args.deactivate:
+        with open('.active', 'w') as f:
+            f.write('{}')
         handle_deactivate()
 
     with open('.active') as f:
@@ -52,6 +56,7 @@ def handle_active(args):
             'path': args.activate
         }
         if active != new_active:
+            new = True
             active = new_active
 
             with open('.active', 'w') as f:
@@ -66,7 +71,7 @@ def handle_active(args):
         raise SystemExit(0)
 
     active['path'] = pathlib.Path(active['path']).absolute()
-    return active
+    return new, active
 
 
 def initialize_dir(path):
@@ -74,6 +79,8 @@ def initialize_dir(path):
         path / 'src' / 'se_code' / 'final',
         path / 'src' / 'se_code' / 'orig',
         path / 'tests',
+        path / 'static',
+        path / 'static' / 'figs',
     ]
     for folder in folders:
         folder.mkdir(parents=True, exist_ok=True)
@@ -89,7 +96,7 @@ def initialize_dir(path):
 
 
 def handle_post(args):
-    active = handle_active(args)
+    new, active = handle_active(args)
 
     if args.initialize:
         initialize_dir(active['path'])
@@ -103,7 +110,8 @@ def handle_post(args):
     if args.start:
         print('Start not implemented yet.')
 
-    if args.activate:
+    if new:
+        handle_deactivate()
         handle_activate(active)
 
     if args.tox:

@@ -2,6 +2,8 @@ import importlib
 import pkgutil
 import os.path
 import contextlib
+import itertools
+import typing
 
 
 def _walk_modules(module_info, *, import_package=False, import_module=False, recursive=False):
@@ -146,3 +148,82 @@ def import_modules(name, globals=None, attrs='__all__'):
         tree[name] = module
         for attr in attrs.split():
             append_attr(tree, attr)
+
+
+SENTINEL = object()
+
+
+class Recursive(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.value = None
+
+    def __missing__(self, key):
+        value = Recursive()
+        self[key] = value
+        return value
+
+
+def group_modules(modules, name):
+    name_len = len(name.split('.'))
+    tree = Recursive()
+    for info, child in modules:
+        if not info.name.startswith(name):
+            continue
+
+        node = tree
+        for seg in info.name.split('.')[name_len:]:
+            node = node[seg]
+        node.value = child
+    return tree
+
+
+class TransparentModule:
+    def __init__(self, tree):
+        self.module = tree.value
+        self.modules = {
+            key: type(self)(value)
+            for key, value in tree.items()
+        }
+
+    def __repr__(self):
+        return f'TransparentModule({self.module})'
+
+    def __getattr__(self, item):
+        try:
+            value = self.modules[item]
+        except KeyError:
+            value = getattr(self.module, item)
+        setattr(self, item, value)
+        return value
+
+    @classmethod
+    def build(cls, module_info, module=None):
+        if module is None:
+            module = importlib.import_module(module_info.name)
+
+        children = walk_modules(module_info, recursive=True, import_package=True, import_module=True)
+        add_qualname(children)
+        group = group_modules(children, module_info.name)
+        group.value = module
+        return cls(group)
+
+
+class TransparentAttrsModule(TransparentModule):
+    __attrs = None
+
+    def attrs(self):
+        attrs = {}
+        for module in self.modules.values():
+            for _attr in dir(module.module):
+                attrs.setdefault(_attr, []).append(getattr(module, _attr))
+        return attrs
+
+
+def transparent_import(name, cls=TransparentModule):
+    with load_importable(name) as (module_info, module):
+        return cls.build(module_info, module)
+
+
+def attr_import(name):
+    return transparent_import(name, TransparentAttrsModule)

@@ -8,9 +8,7 @@ _Food = collections.namedtuple('Food', 'name carbs protein fat vitamins calories
 
 __all__ = [
     'available',
-    'test_orig',
-    'test_early_leaf',
-    'test_peil'
+    'find_combs',
 ]
 
 
@@ -69,43 +67,7 @@ def find_sp(total):
     return tot_avg(total, 'nutrients') * balance + 12
 
 
-def test_orig(available, MAXCALORIES):
-    all_combinations = []
-
-    def inner(total):
-        for food in available:
-            total_calories = [f.calories for f in total]
-            if sum(total_calories) + food.calories <= MAXCALORIES:
-                inner(total[:] + [food])
-            else:
-                sp = find_sp(total)
-                if sp is not None:
-                    all_combinations.append((sp, total))
-
-    inner([])
-    return max(all_combinations, key=lambda i: i[0])
-
-
-def test_early_leaf(available, MAXCALORIES):
-    all_combinations = []
-    min_calories = min(a.calories for a in available)
-
-    def inner(total):
-        if sum(f.calories for f in total) + min_calories > MAXCALORIES:
-            sp = find_sp(total)
-            if sp is not None:
-                all_combinations.append((sp, total))
-        else:
-            for food in available:
-                total_calories = [f.calories for f in total]
-                if sum(total_calories) + food.calories <= MAXCALORIES:
-                    inner(total[:] + [food])
-
-    inner([])
-    return max(all_combinations, key=lambda i: i[0])
-
-
-def test_peil(available, max_calories, delta_step=10):
+def find_combs(available, max_calories, delta_step=10):
     available = list(sorted(available, key=lambda f: f.nutrients, reverse=True))
 
     food_ratios = [

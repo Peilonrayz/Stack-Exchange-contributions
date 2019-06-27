@@ -22,14 +22,16 @@ def test_peil(nums: List[int], target: int) -> Tuple[int, ...]:
     return ()
 
 
-# https://codereview.stackexchange.com/a/216057/42401
-# - Alain T.
+# Derived https://codereview.stackexchange.com/a/216057/42401
+# By Alain T. - https://codereview.stackexchange.com/users/136599/alain-t
 def test_alain_t(nums: List[int], target: int) -> Tuple[int, ...]:
     for i, n in enumerate(nums):
         if target - n in nums:
             return (i, nums.index(target - n))
 
 
+# Derived https://codereview.stackexchange.com/a/216057/42401
+# By Alain T. - https://codereview.stackexchange.com/users/136599/alain-t
 def test_peil_alain(nums: List[int], target: int) -> Tuple[int, ...]:
     if len(nums) <= 100:
         for i, n in enumerate(nums):

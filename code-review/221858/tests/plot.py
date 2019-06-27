@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from graphtimer import Plotter, MultiTimer
 
 
+# Derived from https://codereview.stackexchange.com/q/221858/42401
+# By Justin - https://codereview.stackexchange.com/users/195671/justin
 def solution_justin(n):
     a = []
 
@@ -20,6 +22,8 @@ def solution_justin(n):
     return a
 
 
+# Derive from https://codereview.stackexchange.com/a/221873/42401
+# By AJNeufeld - https://codereview.stackexchange.com/users/100620/ajneufeld
 def solution_ajneufeld(n):
     output = [[1]]
     row = [1]
@@ -29,6 +33,8 @@ def solution_ajneufeld(n):
     return output
 
 
+# Derived from https://codereview.stackexchange.com/a/221862/42401
+# By Josay - https://codereview.stackexchange.com/users/9452/josay
 def solution_josay(n):
     p = []
     for i in range(n):
@@ -42,6 +48,8 @@ def solution_josay(n):
     return p
 
 
+# Derived from https://codereview.stackexchange.com/a/221924/42401
+# By Rishav - https://codereview.stackexchange.com/users/77159/rishav
 def solution_rishav(n):
     output = []
     for i in range(n):

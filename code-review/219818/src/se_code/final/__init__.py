@@ -101,7 +101,9 @@ def largest_sorted(values):
     return values
 
 
+# Independently created
 # Same as https://stackoverflow.com/a/55216417
+# By Allan - https://stackoverflow.com/users/8794221/allan
 def largest_max_count(values):
     if not values:
         return []
@@ -109,7 +111,8 @@ def largest_max_count(values):
     return [maximum] * values.count(maximum)
 
 
-# Derived from Ev. Kounis' answer: https://stackoverflow.com/a/55216309
+# Derived from https://stackoverflow.com/a/55216309
+# By Ev. Kounis - https://stackoverflow.com/users/6162307/ev-kounis
 def largest_max_count_comprehension(values):
     if not values:
         return []
@@ -117,14 +120,16 @@ def largest_max_count_comprehension(values):
     return [maximum for _ in range(values.count(maximum))]
 
 
-# Derived from Daweo's answer: https://stackoverflow.com/a/55216401
+# Derived from https://stackoverflow.com/a/55216401
+# By Daweo - https://stackoverflow.com/users/10785975/daweo
 def largest_max_comprehension(values):
     if not values:
         return []
     return [value for value in values if value == max(values)]
 
 
-# Derived from Daweo's answer: https://stackoverflow.com/a/55216401
+# Derived from https://stackoverflow.com/a/55216401
+# By Daweo - https://stackoverflow.com/users/10785975/daweo
 def largest_max_comprehension_once(values):
     if not values:
         return []
@@ -132,7 +137,8 @@ def largest_max_comprehension_once(values):
     return [value for value in values if value == maximum]
 
 
-# Grijesh Chauhan's answer: https://stackoverflow.com/a/55254044
+# Derived from https://stackoverflow.com/a/55254044
+# By Grijesh Chauhan - https://stackoverflow.com/a/55254044
 def largest_grijesh_chauhan(iterable):
     max = None
     count = 0
