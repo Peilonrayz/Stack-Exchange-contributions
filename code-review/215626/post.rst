@@ -122,3 +122,7 @@ Output is also what you'd expect:
 
     >>> find_combs(available, 2000)
     (79.65454545454546, (Food(name='Simmered Meat', carbs=6.0, protein=18.0, fat=13.0, vitamins=5.0, calories=900.0), Food(name='Vegetable Medley', carbs=8.0, protein=4.0, fat=7.0, vitamins=17.0, calories=900.0), Food(name='Flour', carbs=15.0, protein=0.0, fat=0.0, vitamins=0.0, calories=50.0), Food(name='Flour', carbs=15.0, protein=0.0, fat=0.0, vitamins=0.0, calories=50.0), Food(name='Flour', carbs=15.0, protein=0.0, fat=0.0, vitamins=0.0, calories=50.0), Food(name='Flour', carbs=15.0, protein=0.0, fat=0.0, vitamins=0.0, calories=50.0)))
+
+.. note::
+
+    Code to `plot the graphs <https://github.com/Peilonrayz/Stack-Exchange-contributions/blob/master/code-review/215626/tests/test_plot.py>`_, `complete changes <https://github.com/Peilonrayz/Stack-Exchange-contributions/tree/master/code-review/215626>`_.
