@@ -1,6 +1,14 @@
 # User defined
 helpers/
 .mam/
+.active
+
+# post symlinks
+_configs/post/docs/source/static
+_configs/post/docs/source/post.rst
+_configs/post/src
+_configs/post/static
+_configs/post/tests
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
