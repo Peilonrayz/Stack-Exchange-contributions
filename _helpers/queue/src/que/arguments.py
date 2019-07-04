@@ -25,3 +25,7 @@ post.add_argument('-t', '--tox', action='store_true', help='tox post')
 
 se = subparsers.add_parser('se')
 se.set_defaults(queue='se')
+
+se = subparsers.add_parser('new')
+se.set_defaults(queue='new')
+se.add_argument('activate', type=str, help='activate post id')

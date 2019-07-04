@@ -86,9 +86,12 @@ def initialize_dir(path):
         folder.mkdir(parents=True, exist_ok=True)
 
     files = [
+        path / 'src' / 'se_code' / 'final' / '__init__.py',
+        path / 'src' / 'se_code' / 'orig' / '__init__.py',
         path / 'src' / 'se_code' / '__init__.py',
         path / 'tests' / 'test_code.py',
         path / 'post.rst',
+        path / 'readme.rst',
     ]
     for file in files:
         with file.open('a'):
@@ -103,6 +106,7 @@ def handle_post(args):
 
     if args.download:
         print('Downloading not implemented yet.')
+        input('Manually download files, and press enter when done.\n')
 
     if args.clean:
         print('Clean not implemented yet.')
