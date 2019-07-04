@@ -76,7 +76,7 @@ def cost_calc(weight):
         print(
             "Your cheapest shipping method is "
             + costs[0].value
-            + " costing $"
+            + " shipping costing $"
             + str(price)
         )
 
@@ -88,13 +88,13 @@ if __name__ == '__main__':
 Output is also what you’d expect:
 
 <!-- from se_code.final import cost_calc -->
-```
+```none
 >>> cost_calc(1)
-Your cheapest shipping method is Drone costing $4.5
+Your cheapest shipping method is Drone shipping costing $4.5
 >>> cost_calc(5)
-Your cheapest shipping method is Ground costing $35
+Your cheapest shipping method is Ground shipping costing $35
 >>> cost_calc(1000)
-Your cheapest shipping method is Premium Ground costing $125
+Your cheapest shipping method is Premium Ground shipping costing $125
 >>> cost_calc(10 / 3)
 Your cheapest shipping method is Ground shipping and Drone shipping as they both cost $30.0
 >>> cost_calc(105 / 4.75)

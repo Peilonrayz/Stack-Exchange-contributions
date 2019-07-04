@@ -52,7 +52,7 @@ def cost_calc(weight):
         print(
             "Your cheapest shipping method is "
             + costs[0].value
-            + " costing $"
+            + " shipping costing $"
             + str(price)
         )
 
